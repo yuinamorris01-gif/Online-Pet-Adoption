@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications - Pet Adoption System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">My Adoption Applications</h1>
+
+    {% if applications %}
+    <div class="row">
+        {% for app in applications %}
+        <div class="col-12 mb-4">
+            <div class="card application-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            {% if app.photo_filename %}
+                            <img src="{{ url_for('static', filename='images/' + app.photo_filename) }}"
+                                class="img-fluid rounded pet-thumb" alt="{{ app.pet_name }}">
+                            {% else %}
+                            <div class="pet-thumb-placeholder d-flex align-items-center justify-content-center rounded">
+                                <i class="fas fa-paw fa-2x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="card-title">{{ app.pet_name }}</h5>
+                            <p class="card-text">
+                                <strong>{{ app.species | title }}</strong> - {{ app.breed }}<br>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar"></i>
+                                    Applied on {{ app.submitted_at | strftime('%B %d, %Y at %I:%M %p') }}
+                                </small>
+                            </p>
+                        </div>
+
+                        <div class="col-md-4 text-end">
+                            <div class="mb-2">
+                                {% if app.status == 'pending' %}
+                                <span class="badge bg-warning fs-6">Pending Review</span>
+                                {% elif app.status == 'approved' %}
+                                <span class="badge bg-success fs-6">Approved</span>
+                                {% elif app.status == 'denied' %}
+                                <span class="badge bg-danger fs-6">Denied</span>
+                                {% endif %}
+                            </div>
+
+                            {% if app.status == 'approved' %}
+                            <p class="text-success mb-0">
+                                <i class="fas fa-check-circle"></i>
+                                Congratulations! Your application was approved.
+                            </p>
+                            {% elif app.status == 'denied' %}
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-times-circle"></i>
+                                Application was not approved.
+                            </p>
+                            {% else %}
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-clock"></i>
+                                We're reviewing your application.
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if app.admin_notes and app.status in ['approved', 'denied'] %}
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>Admin Notes:</h6>
+                            <p class="text-muted">{{ app.admin_notes }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <strong>Your Application:</strong>
+                            <p class="text-muted">{{ app.reason_for_adoption[:150] }}{% if
+                                app.reason_for_adoption|length > 150 %}...{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('pets') }}" class="btn btn-primary">
+            <i class="fas fa-search"></i> Browse More Pets
+        </a>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+        <h3>No Applications Yet</h3>
+        <p class="text-muted">You haven't submitted any adoption applications yet.</p>
+        <a href="{{ url_for('pets') }}" class="btn btn-primary">
+            <i class="fas fa-paw"></i> Browse Available Pets
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

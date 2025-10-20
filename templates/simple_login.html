@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Simple Login - ADOPT ME{% endblock %}
+
+{% block content %}
+<div class="container login-margin-top">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Simple Login Test</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username or Email</label>
+                            <input type="text" class="form-control" id="username" name="username" value="admin"
+                                placeholder="Enter username or email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" value="admin123"
+                                placeholder="Enter password">
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
+                            <label class="form-check-label" for="remember_me">Remember me</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+
+                    <hr>
+                    <p class="text-center">
+                        <a href="{{ url_for('forgot_password') }}">Forgot Password?</a> |
+                        <a href="{{ url_for('register') }}">Register</a>
+                    </p>
+
+                    <div class="alert alert-info">
+                        <strong>Test Credentials:</strong><br>
+                        Username: admin<br>
+                        Password: admin123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </>
+    {% endblock %}

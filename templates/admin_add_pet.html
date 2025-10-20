@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Add Pet - ADOPT ME Admin{% endblock %}
+
+{% block content %}
+<div class="admin-add-pet-page">
+    <!-- Header Section -->
+    <div class="admin-page-header" data-aos="fade-down">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="header-left">
+                    <div class="page-breadcrumb">
+                        <a href="{{ url_for('admin_dashboard') }}" class="breadcrumb-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <a href="{{ url_for('admin_pets') }}" class="breadcrumb-link">
+                            <i class="fas fa-paw"></i>
+                            Manage Pets
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Add Pet</span>
+                    </div>
+                    <h1 class="page-title">
+                        <i class="fas fa-plus-circle"></i>
+                        Add New Pet
+                    </h1>
+                    <p class="page-subtitle">Create a new pet profile for adoption</p>
+                </div>
+                <div class="header-right">
+                    <a href="{{ url_for('admin_pets') }}" class="modern-btn secondary large">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Pets</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Form Section -->
+    <div class="add-form-section" data-aos="fade-up">
+        <div class="container">
+            <div class="add-form-card">
+                <form method="POST" enctype="multipart/form-data" class="modern-form">
+                    <div class="form-grid">
+                        <!-- Left Column -->
+                        <div class="form-column">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-info-circle"></i>
+                                    Basic Information
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="name" class="modern-label">
+                                        <i class="fas fa-tag"></i>
+                                        Pet Name *
+                                    </label>
+                                    <input type="text" class="modern-input" id="name" name="name" required
+                                        placeholder="Enter pet's name">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="species" class="modern-label">
+                                            <i class="fas fa-paw"></i>
+                                            Species *
+                                        </label>
+                                        <select class="modern-select" id="species" name="species" required>
+                                            <option value="">Select species</option>
+                                            <option value="dog">Dog</option>
+                                            <option value="cat">Cat</option>
+                                            <option value="rabbit">Rabbit</option>
+                                            <option value="bird">Bird</option>
+                                            <option value="hamster">Hamster</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="breed" class="modern-label">
+                                            <i class="fas fa-dna"></i>
+                                            Breed *
+                                        </label>
+                                        <input type="text" class="modern-input" id="breed" name="breed" required
+                                            placeholder="Enter breed">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="age" class="modern-label">
+                                            <i class="fas fa-calendar"></i>
+                                            Age (years) *
+                                        </label>
+                                        <input type="number" class="modern-input" id="age" name="age" min="0" max="25"
+                                            required placeholder="0">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="gender" class="modern-label">
+                                            <i class="fas fa-venus-mars"></i>
+                                            Gender *
+                                        </label>
+                                        <select class="modern-select" id="gender" name="gender" required>
+                                            <option value="">Select gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="size" class="modern-label">
+                                            <i class="fas fa-ruler-vertical"></i>
+                                            Size *
+                                        </label>
+                                        <select class="modern-select" id="size" name="size" required>
+                                            <option value="">Select size</option>
+                                            <option value="small">Small</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="large">Large</option>
+                                            <option value="extra-large">Extra Large</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="location" class="modern-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Location *
+                                    </label>
+                                    <input type="text" class="modern-input" id="location" name="location" required
+                                        placeholder="Enter pet's location">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="vaccination_status" class="modern-label">
+                                        <i class="fas fa-syringe"></i>
+                                        Vaccination Status *
+                                    </label>
+                                    <select class="modern-select" id="vaccination_status" name="vaccination_status"
+                                        required>
+                                        <option value="">Select status</option>
+                                        <option value="up-to-date">Up to date</option>
+                                        <option value="partial">Partially vaccinated</option>
+                                        <option value="unknown">Unknown</option>
+                                        <option value="not-vaccinated">Not vaccinated</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="form-column">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-image"></i>
+                                    Photo & Details
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="photo" class="modern-label">
+                                        <i class="fas fa-camera"></i>
+                                        Pet Photo
+                                    </label>
+                                    <div class="photo-upload-container">
+                                        <div class="photo-upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <span>Click to upload photo</span>
+                                            <small>or drag and drop</small>
+                                        </div>
+                                        <input type="file" class="modern-input file-input" id="photo" name="photo"
+                                            accept="image/*">
+                                        <div class="form-help">Upload a clear photo (JPG, PNG, max 16MB)</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description" class="modern-label">
+                                        <i class="fas fa-align-left"></i>
+                                        Description *
+                                    </label>
+                                    <textarea class="modern-input" id="description" name="description" rows="6" required
+                                        placeholder="Describe the pet's personality, behavior, and any special characteristics..."></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="special_needs" class="modern-label">
+                                        <i class="fas fa-heart"></i>
+                                        Special Needs
+                                    </label>
+                                    <textarea class="modern-input" id="special_needs" name="special_needs" rows="3"
+                                        placeholder="Any medical conditions, dietary restrictions, or special care requirements..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_pets') }}" class="modern-btn secondary">
+                                <i class="fas fa-times"></i>
+                                <span>Cancel</span>
+                            </a>
+                            <button type="submit" class="modern-btn primary">
+                                <i class="fas fa-plus"></i>
+                                <span>Add Pet</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

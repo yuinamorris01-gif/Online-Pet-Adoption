@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Find Pets - ADOPT ME{% endblock %}
+
+{% block content %}
+<div class="pets-page-container">
+    <div class="container">
+        <div class="pets-hero-section">
+            <h1 class="pets-hero-title">Find Your Perfect Companion</h1>
+            <p class="pets-hero-subtitle">Discover amazing pets waiting for their forever homes</p>
+        </div>
+
+        <!-- Modern Search and Filter Section -->
+        <div class="modern-filter-section">
+            <h2 class="filter-title">Search & Filter</h2>
+            <form method="GET" id="filterForm" class="modern-filter-form">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Species</label>
+                        <select name="species" id="species" class="modern-select" aria-label="Select pet species">
+                            <option value="">All Species</option>
+                            {% for species in species_list %}
+                            <option value="{{ species.species }}" {% if filters.species==species.species %}selected{%
+                                endif %}>
+                                {{ species.species | title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Breed</label>
+                        <select name="breed" id="breed" class="modern-select" aria-label="Select pet breed">
+                            <option value="">All Breeds</option>
+                            {% for breed in breeds_list %}
+                            <option value="{{ breed.breed }}" {% if filters.breed==breed.breed %}selected{% endif %}>
+                                {{ breed.breed }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Min Age</label>
+                        <input type="number" name="age_min" id="age_min" class="modern-input"
+                            value="{{ filters.age_min }}" min="0" max="20" placeholder="0">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Max Age</label>
+                        <input type="number" name="age_max" id="age_max" class="modern-input"
+                            value="{{ filters.age_max }}" min="0" max="20" placeholder="20">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Size</label>
+                        <select name="size" id="size" class="modern-select" aria-label="Select pet size">
+                            <option value="">Any Size</option>
+                            {% for size in sizes_list %}
+                            <option value="{{ size.size }}" {% if filters.size==size.size %}selected{% endif %}>
+                                {{ size.size | title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Location</label>
+                        <select name="location" id="location" class="modern-select" aria-label="Select pet location">
+                            <option value="">All Locations</option>
+                            {% for location in locations_list %}
+                            <option value="{{ location.location }}" {% if filters.location==location.location
+                                %}selected{% endif %}>
+                                {{ location.location }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="modern-btn primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a href="{{ url_for('pets') }}" class="modern-btn secondary">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-summary">
+            <p class="results-text">
+                <i class="fas fa-info-circle"></i>
+                Found {{ pets|length }} pet{% if pets|length != 1 %}s{% endif %} matching your criteria
+            </p>
+        </div>
+
+        <!-- Modern Pet Grid -->
+        {% if pets %}
+        <div class="modern-pet-grid">
+            {% for pet in pets %}
+            <div class="modern-pet-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="pet-card-image">
+                    {% if pet.photo_filename %}
+                    <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}" class="pet-image"
+                        alt="{{ pet.name }}">
+                    {% else %}
+                    <div class="pet-image-placeholder">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="pet-status-badge">
+                        <span class="status-available">Available</span>
+                    </div>
+
+                    <div class="pet-card-overlay">
+                        <h3 class="pet-name">{{ pet.name }}</h3>
+                    </div>
+                </div>
+
+                <div class="pet-card-content">
+                    <div class="pet-info-header">
+                        <span class="pet-species">{{ pet.species | title }}</span>
+                        <span class="pet-divider">-</span>
+                        <span class="pet-breed">{{ pet.breed }}</span>
+                    </div>
+
+                    <div class="pet-details">
+                        <div class="pet-detail">
+                            <i class="fas fa-birthday-cake"></i>
+                            <span>{{ pet.age }} years old</span>
+                        </div>
+                        <div class="pet-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ pet.location }}</span>
+                        </div>
+                    </div>
+
+                    <p class="pet-description">
+                        {{ pet.description[:100] }}{% if pet.description|length > 100 %}...{% endif %}
+                    </p>
+
+                    <a href="{{ url_for('pet_detail', pet_id=pet.id) }}" class="pet-card-btn">
+                        <i class="fas fa-eye"></i>
+                        <span>View Details</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-pets-found">
+            <div class="no-pets-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="no-pets-title">No pets found</h3>
+            <p class="no-pets-message">Try adjusting your search criteria to find more pets.</p>
+            <a href="{{ url_for('pets') }}" class="modern-btn primary">
+                <i class="fas fa-refresh"></i> View All Pets
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+        duration: 600,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 50
+    });
+
+    // Auto-submit form when filters change
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const filterElements = filterForm.querySelectorAll('select, input');
+
+        filterElements.forEach(element => {
+            element.addEventListener('change', function () {
+                filterForm.submit();
+            });
+        });
+
+        // Add hover effects to pet cards
+        const petCards = document.querySelectorAll('.modern-pet-card');
+        petCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-12px)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

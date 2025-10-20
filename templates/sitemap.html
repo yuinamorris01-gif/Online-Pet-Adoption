@@ -1,0 +1,553 @@
+{% extends "base.html" %}
+
+{% block title %}Site Map - Pet Adoption System{% endblock %}
+
+{% block content %}
+<div class="sitemap-container min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Page Title -->
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h1 class="text-5xl font-bold text-white mb-4">Site Navigation</h1>
+            <p class="text-blue-200 text-xl">Explore all areas of our pet adoption platform</p>
+        </div>
+
+        <!-- Sitemap Hierarchy -->
+        <div class="sitemap-hierarchy relative">
+            
+            <!-- Level 1: Homepage (Root) -->
+            <div class="flex justify-center mb-16">
+                <div class="sitemap-node homepage-node" 
+                     data-motion-hover="lift"
+                     data-motion-tap="shrink"
+                     onclick="location.href='{{ url_for('index') }}'">
+                    <div class="node-content">
+                        <i class="fas fa-home text-2xl mb-2"></i>
+                        <span class="node-title">HOMEPAGE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Lines from Homepage -->
+            <div class="connection-lines level-1">
+                <div class="horizontal-line"></div>
+                <div class="vertical-connectors">
+                    <div class="connector"></div>
+                    <div class="connector"></div>
+                    <div class="connector"></div>
+                    <div class="connector"></div>
+                </div>
+            </div>
+
+            <!-- Level 2: Main Sections -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                
+                <!-- Home Section -->
+                <div class="sitemap-section">
+                    <div class="sitemap-node main-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="location.href='{{ url_for('index') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-house-user text-xl mb-2"></i>
+                            <span class="node-title">HOME</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-nodes -->
+                    <div class="sub-nodes mt-8">
+                        <div class="sub-connection-line"></div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="location.href='{{ url_for('index') }}'">
+                            <span>HOMEPAGE</span>
+                        </div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="location.href='{{ url_for('index') }}#footer'">
+                            <span>FOOTER</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div class="sitemap-section">
+                    <div class="sitemap-node main-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="alert('About page - Coming Soon!')">
+                        <div class="node-content">
+                            <i class="fas fa-info-circle text-xl mb-2"></i>
+                            <span class="node-title">ABOUT</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-nodes -->
+                    <div class="sub-nodes mt-8">
+                        <div class="sub-connection-line"></div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="alert('About Us - Coming Soon!')">
+                            <span>ABOUT US</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Favourites Section -->
+                <div class="sitemap-section">
+                    <div class="sitemap-node main-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="alert('Favourites - Coming Soon!')">
+                        <div class="node-content">
+                            <i class="fas fa-heart text-xl mb-2"></i>
+                            <span class="node-title">FAVOURITES</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-nodes -->
+                    <div class="sub-nodes mt-8">
+                        <div class="sub-connection-line"></div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="alert('Favourites - Coming Soon!')">
+                            <span>FAVOURITES</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Section -->
+                <div class="sitemap-section">
+                    <div class="sitemap-node main-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="location.href='{{ url_for('login') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-sign-in-alt text-xl mb-2"></i>
+                            <span class="node-title">LOGIN</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-nodes -->
+                    <div class="sub-nodes mt-8">
+                        <div class="sub-connection-line"></div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="location.href='{{ url_for('login') }}'">
+                            <span>LOGIN / SIGNUP</span>
+                        </div>
+                        <div class="sub-node" data-motion-hover="grow" onclick="alert('Forgot Password - Coming Soon!')">
+                            <span>FORGET PASSWORD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Additional Sections -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mt-20">
+                
+                <!-- Find A Pet Section -->
+                <div class="sitemap-section-large">
+                    <div class="sitemap-node large-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="location.href='{{ url_for('pets') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-search text-2xl mb-3"></i>
+                            <span class="node-title">FIND A PET</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Pet Categories -->
+                    <div class="pet-categories grid grid-cols-2 gap-4 mt-12">
+                        <div class="category-connection-line"></div>
+                        <div class="pet-category-node" data-motion-hover="grow" onclick="location.href='{{ url_for('pets') }}?species=dog'">
+                            <i class="fas fa-dog text-lg mb-2"></i>
+                            <span>DOGS</span>
+                        </div>
+                        <div class="pet-category-node" data-motion-hover="grow" onclick="location.href='{{ url_for('pets') }}?species=cat'">
+                            <i class="fas fa-cat text-lg mb-2"></i>
+                            <span>CATS</span>
+                        </div>
+                        <div class="pet-category-node" data-motion-hover="grow" onclick="alert('Rabbits - Coming Soon!')">
+                            <i class="fas fa-carrot text-lg mb-2"></i>
+                            <span>RABBITS</span>
+                        </div>
+                        <div class="pet-category-node" data-motion-hover="grow" onclick="alert('Small & Furry - Coming Soon!')">
+                            <i class="fas fa-paw text-lg mb-2"></i>
+                            <span>SMALL & FURRY</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="sitemap-section-large">
+                    <div class="sitemap-node large-node"
+                         data-motion-hover="lift"
+                         data-motion-tap="shrink"
+                         onclick="alert('Contact - Coming Soon!')">
+                        <div class="node-content">
+                            <i class="fas fa-envelope text-2xl mb-3"></i>
+                            <span class="node-title">CONTACT</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Sub-sections -->
+                    <div class="contact-sections mt-12">
+                        <div class="contact-connection-line"></div>
+                        <div class="contact-node" data-motion-hover="grow" onclick="alert('Contact Us - Coming Soon!')">
+                            <i class="fas fa-phone text-lg mb-2"></i>
+                            <span>CONTACT US</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if session.user_id and session.role == 'admin' %}
+            <!-- Admin Section (Only for logged-in admins) -->
+            <div class="admin-section mt-20 pt-16 border-t border-blue-700">
+                <h3 class="text-center text-2xl font-semibold text-white mb-8" data-aos="fade-up">Admin Panel</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="sitemap-node admin-node"
+                         data-motion-hover="lift"
+                         onclick="location.href='{{ url_for('admin_dashboard') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-tachometer-alt text-xl mb-2"></i>
+                            <span class="node-title">DASHBOARD</span>
+                        </div>
+                    </div>
+                    <div class="sitemap-node admin-node"
+                         data-motion-hover="lift"
+                         onclick="location.href='{{ url_for('admin_pets') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-pets text-xl mb-2"></i>
+                            <span class="node-title">MANAGE PETS</span>
+                        </div>
+                    </div>
+                    <div class="sitemap-node admin-node"
+                         data-motion-hover="lift"
+                         onclick="location.href='{{ url_for('admin_applications') }}'">
+                        <div class="node-content">
+                            <i class="fas fa-file-alt text-xl mb-2"></i>
+                            <span class="node-title">APPLICATIONS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Back to Home Button -->
+        <div class="text-center mt-20">
+            <button class="back-home-btn bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 text-white px-8 py-3 rounded-xl font-medium hover:bg-opacity-30 transition-all duration-300"
+                    data-motion-hover="lift"
+                    onclick="location.href='{{ url_for('index') }}'">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Homepage
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+/* Sitemap-specific styles */
+.sitemap-container {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #3b82f6 50%, #1d4ed8 75%, #3730a3 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.sitemap-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Sitemap Nodes */
+.sitemap-node {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sitemap-node:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.homepage-node {
+    background: rgba(255, 107, 71, 0.2);
+    border-color: rgba(255, 107, 71, 0.4);
+    min-width: 180px;
+    min-height: 140px;
+}
+
+.homepage-node:hover {
+    background: rgba(255, 107, 71, 0.3);
+    border-color: rgba(255, 107, 71, 0.6);
+}
+
+.main-node {
+    min-width: 150px;
+    min-height: 100px;
+}
+
+.large-node {
+    min-width: 200px;
+    min-height: 120px;
+}
+
+.admin-node {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.admin-node:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+.node-content {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.node-title {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Sub-nodes */
+.sub-node, .pet-category-node, .contact-node {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.sub-node:hover, .pet-category-node:hover, .contact-node:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.pet-category-node, .contact-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    min-height: 80px;
+}
+
+/* Connection Lines */
+.connection-lines {
+    position: relative;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.horizontal-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.vertical-connectors {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 100%;
+}
+
+.connector {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.sub-connection-line {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent);
+    margin: 0 auto 16px;
+}
+
+.category-connection-line, .contact-connection-line {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+}
+
+.pet-categories {
+    position: relative;
+}
+
+.pet-categories::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sitemap-node {
+        min-height: 100px;
+        padding: 16px;
+    }
+    
+    .homepage-node {
+        min-width: 140px;
+        min-height: 120px;
+    }
+    
+    .node-title {
+        font-size: 12px;
+    }
+    
+    .connection-lines .horizontal-line {
+        width: 90%;
+    }
+    
+    .vertical-connectors {
+        left: 5%;
+        right: 5%;
+    }
+}
+
+/* Animation enhancements */
+.sitemap-node {
+    animation: nodeFloat 6s ease-in-out infinite;
+}
+
+.sitemap-node:nth-child(2n) {
+    animation-delay: -2s;
+}
+
+.sitemap-node:nth-child(3n) {
+    animation-delay: -4s;
+}
+
+@keyframes nodeFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Glass morphism effect */
+.back-home-btn {
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS for the sitemap
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out',
+        once: true,
+        offset: 100
+    });
+    
+    // Add stagger animation for sitemap nodes
+    const sitemapNodes = document.querySelectorAll('.sitemap-node');
+    if (sitemapNodes.length > 0) {
+        sitemapNodes.forEach((node, index) => {
+            gsap.set(node, { 
+                opacity: 0, 
+                y: 50, 
+                scale: 0.8 
+            });
+        });
+        
+        // Stagger animation with Motion.js
+        Motion.stagger(sitemapNodes, {
+            opacity: 1,
+            y: 0,
+            scale: 1
+        }, {
+            staggerDelay: 0.1,
+            from: 'start',
+            duration: 0.6,
+            ease: 'backOut',
+            delay: 0.5
+        });
+    }
+    
+    // Add floating animation to connection lines
+    const connectionLines = document.querySelectorAll('.horizontal-line, .sub-connection-line');
+    connectionLines.forEach(line => {
+        gsap.fromTo(line, {
+            scaleX: 0,
+            opacity: 0
+        }, {
+            scaleX: 1,
+            opacity: 1,
+            duration: 1.5,
+            delay: 1,
+            ease: 'power2.out'
+        });
+    });
+    
+    // Enhanced hover effects for categories
+    const categoryNodes = document.querySelectorAll('.pet-category-node, .contact-node');
+    categoryNodes.forEach(node => {
+        const motionNode = Motion.create(node);
+        motionNode.whileHover({
+            scale: 1.1,
+            rotateY: 10,
+            z: 20
+        }, {
+            duration: 0.3,
+            ease: 'easeOut'
+        });
+    });
+    
+    // Parallax effect for background elements
+    gsap.to('.sitemap-container::before', {
+        backgroundPosition: '120% 80%',
+        duration: 20,
+        repeat: -1,
+        yoyo: true,
+        ease: 'none'
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - ADOPT ME{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <!-- Header Section -->
+    <div class="admin-header" data-aos="fade-down">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="welcome-section">
+                        <h1 class="admin-title">
+                            <i class="fas fa-crown"></i>
+                            Admin Control Center
+                        </h1>
+                        <p class="admin-subtitle">Manage your pet adoption system efficiently</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="quick-actions">
+                        <a href="{{ url_for('admin_add_pet') }}" class="action-btn primary">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Pet</span>
+                        </a>
+                        <a href="{{ url_for('admin_pets') }}" class="action-btn secondary">
+                            <i class="fas fa-paw"></i>
+                            <span>Manage Pets</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-section" data-aos="fade-up">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ stats.total_pets }}</div>
+                        <div class="stat-label">Total Pets</div>
+                    </div>
+                    <div class="stat-glow pets"></div>
+                </div>
+
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ stats.available_pets }}</div>
+                        <div class="stat-label">Available</div>
+                    </div>
+                    <div class="stat-glow available"></div>
+                </div>
+
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ stats.pending_applications }}</div>
+                        <div class="stat-label">Pending Apps</div>
+                    </div>
+                    <div class="stat-glow pending"></div>
+                </div>
+
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ stats.total_users }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-glow users"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Applications Section -->
+    <div class="applications-section" data-aos="fade-up" data-aos-delay="500">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    Recent Applications
+                </h2>
+                <a href="{{ url_for('admin_applications') }}" class="view-all-btn">
+                    View All Applications
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="applications-container">
+                {% if recent_applications %}
+                <div class="applications-list">
+                    {% for app in recent_applications %}
+                    <div class="application-card" data-aos="slide-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <div class="app-info">
+                            <div class="pet-name">{{ app.pet_name }}</div>
+                            <div class="applicant-details">
+                                <span class="applicant-name">{{ app.applicant_name }}</span>
+                                <span class="applicant-email">{{ app.applicant_email }}</span>
+                            </div>
+                        </div>
+                        <div class="app-meta">
+                            <div class="app-date">{{ app.submitted_at.strftime('%b %d, %Y') }}</div>
+                            <div class="app-status pending">Pending</div>
+                        </div>
+                        <div class="app-actions">
+                            <a href="{{ url_for('admin_application_detail', app_id=app.id) }}" class="review-btn">
+                                <i class="fas fa-eye"></i>
+                                Review
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No Pending Applications</h3>
+                    <p>All caught up! No applications need your attention right now.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="actions-section" data-aos="fade-up" data-aos-delay="600">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Quick Actions
+                </h2>
+            </div>
+
+            <div class="actions-grid">
+                <a href="{{ url_for('admin_add_pet') }}" class="action-card add-pet" data-aos="zoom-in"
+                    data-aos-delay="700">
+                    <div class="action-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>Add New Pet</h3>
+                        <p>Add a new pet to the adoption system</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('admin_pets') }}" class="action-card manage-pets" data-aos="zoom-in"
+                    data-aos-delay="800">
+                    <div class="action-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>Manage Pets</h3>
+                        <p>Edit, update, and organize pet listings</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('admin_applications', status='pending') }}" class="action-card review-apps"
+                    data-aos="zoom-in" data-aos-delay="900">
+                    <div class="action-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>Review Applications</h3>
+                        <p>Process pending adoption applications</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('admin_applications', status='approved') }}" class="action-card approved-apps"
+                    data-aos="zoom-in" data-aos-delay="1000">
+                    <div class="action-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>View Approved</h3>
+                        <p>See all approved adoption applications</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

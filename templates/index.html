@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}ADOPT ME - Don't shop. Adopt.{% endblock %}
+
+{% block content %}
+<!-- Mission Images Section -->
+<section class="mission-images-section">
+    <img src="{{ url_for('static', filename='images/1.png') }}" alt="Mission Dog" class="mission-img">
+    <img src="{{ url_for('static', filename='images/2.png') }}" alt="Mission Rescue" class="mission-img">
+</section>
+
+{% if pets %}
+<section class="featured-pets-section">
+    <div class="container">
+        <h2 class="featured-pets-title" data-aos="fade-up">Featured Pets</h2>
+        <div class="featured-pets-grid">
+            {% for pet in pets %}
+            <div class="modern-pet-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="pet-card-image">
+                    {% if pet.photo_filename %}
+                    <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}" class="pet-image"
+                        alt="{{ pet.name }}">
+                    {% else %}
+                    <div class="pet-image-placeholder">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="pet-status-badge">
+                        <span class="status-available">Available</span>
+                    </div>
+
+                    <div class="pet-card-overlay">
+                        <h3 class="pet-name">{{ pet.name }}</h3>
+                    </div>
+                </div>
+
+                <div class="pet-card-content">
+                    <div class="pet-info-header">
+                        <span class="pet-species">{{ pet.species | title }}</span>
+                        <span class="pet-breed">{{ pet.breed }}</span>
+                    </div>
+
+                    <div class="pet-details">
+                        <div class="pet-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ pet.age }} {% if pet.age == 1 %}year{% else %}years{% endif %} old</span>
+                        </div>
+                        <div class="pet-detail">
+                            <i class="fas fa-ruler-vertical"></i>
+                            <span>{{ pet.size | title }}</span>
+                        </div>
+                        <div class="pet-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ pet.location }}</span>
+                        </div>
+                    </div>
+
+                    <p class="pet-description">
+                        {{ pet.description[:100] }}{% if pet.description|length > 100 %}...{% endif %}
+                    </p>
+
+                    <a href="{{ url_for('pet_detail', pet_id=pet.id) }}" class="pet-card-btn">
+                        <i class="fas fa-eye"></i>
+                        <span>View Details</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% else %}
+<div class="container mx-auto px-4 py-20">
+    <div class="text-center">
+        <h3 class="text-2xl font-semibold mb-4">No pets available at the moment</h3>
+        <p class="text-gray-300">Please check back later for new arrivals!</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="bg-gray-800 py-20">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <h2 class="text-3xl font-bold mb-6">Ready to Adopt?</h2>
+                <p class="text-xl text-gray-300 mb-8">Join thousands of happy families who have found their perfect pet
+                    companion through our platform.</p>
+                <ul class="list-unstyled space-y-3">
+                    <li class="flex items-center" data-aos="fade-right" data-aos-delay="100">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        <span>Easy application process</span>
+                    </li>
+                    <li class="flex items-center" data-aos="fade-right" data-aos-delay="200">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        <span>Vetted and healthy pets</span>
+                    </li>
+                    <li class="flex items-center" data-aos="fade-right" data-aos-delay="300">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        <span>Ongoing support</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="text-center" data-aos="fade-left">
+                {% if not session.user_id %}
+                <a href="{{ url_for('register') }}"
+                    class="btn btn-success bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded font-medium transition-colors duration-300 inline-flex items-center mr-4 mb-4">
+                    <i class="fas fa-user-plus mr-2"></i> Create Account
+                </a>
+                <a href="{{ url_for('login') }}"
+                    class="btn btn-outline-primary border border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded font-medium transition-colors duration-300 inline-flex items-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+                </a>
+                {% else %}
+                <a href="{{ url_for('pets') }}"
+                    class="btn btn-success bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded font-medium transition-colors duration-300 inline-flex items-center">
+                    <i class="fas fa-search mr-2"></i> Start Browsing
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Pass pet data to JavaScript -->
+<script>
+    // Make pets data available to JavaScript
+    {% if pets %}
+    window.petsData = [
+        {% for pet in pets[: 6] %}
+    {
+        id: { { pet.id } },
+        name: "{{ pet.name }}",
+            age: { { pet.age } },
+        breed: "{{ pet.breed }}",
+            species: "{{ pet.species }}",
+                photo_filename: {% if pet.photo_filename %} "{{ pet.photo_filename }}"{% else %} null{% endif %}
+    } {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    ];
+    {% else %}
+    window.petsData = [];
+    {% endif %}
+</script>
+
+<!-- Modern Slider JavaScript -->
+<script src="{{ url_for('static', filename='js/modern-slider.js') }}"></script>
+
+<script>
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 100
+    });
+
+    // Set hero slide backgrounds dynamically
+    document.addEventListener('DOMContentLoaded', function () {
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        heroSlides.forEach(slide => {
+            const petPhoto = slide.getAttribute('data-pet-photo');
+            if (petPhoto && petPhoto !== 'none') {
+                slide.style.backgroundImage = `url('{{ url_for('static', filename='images/') }}${petPhoto}')`;
+            }
+        });
+    });
+
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pets Gallery Swiper init
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.querySelector('.petsGallery')) {
+            const gallery = new Swiper('.petsGallery', {
+                loop: true,
+                speed: 600,
+                spaceBetween: 24,
+                slidesPerView: 1,
+                centeredSlides: true,
+                autoplay: { delay: 2500, disableOnInteraction: false },
+                pagination: { el: '.petsGallery .swiper-pagination', clickable: true },
+                navigation: {
+                    nextEl: '.petsGallery .swiper-button-next',
+                    prevEl: '.petsGallery .swiper-button-prev'
+                },
+                a11y: { enabled: true },
+                keyboard: { enabled: true },
+                breakpoints: {
+                    768: { slidesPerView: 2 },
+                    1200: { slidesPerView: 3 }
+                }
+            });
+        }
+    });
+
+    // Enhanced hover animations for pet cards in featured section
+    document.addEventListener('DOMContentLoaded', function () {
+        const petCards = document.querySelectorAll('.pet-card');
+        petCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                gsap.to(card, {
+                    y: -10,
+                    scale: 1.02,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    y: 0,
+                    scale: 1,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                });
+            });
+        });
+
+        // Feature icons animation
+        const featureIcons = document.querySelectorAll('.fa-heart, .fa-home, .fa-users');
+        featureIcons.forEach((icon, index) => {
+            gsap.fromTo(icon,
+                { scale: 0, rotation: -180 },
+                {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 1,
+                    delay: index * 0.2,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: icon,
+                        start: "top 80%",
+                        once: true
+                    }
+                }
+            );
+        });
+    });
+</script>
+{% endblock %}

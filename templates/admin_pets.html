@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Manage Pets - ADOPT ME Admin{% endblock %}
+
+{% block content %}
+<div class="admin-pets-page">
+    <!-- Header Section -->
+    <div class="admin-page-header" data-aos="fade-down">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="header-left">
+                    <div class="page-breadcrumb">
+                        <a href="{{ url_for('admin_dashboard') }}" class="breadcrumb-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Manage Pets</span>
+                    </div>
+                    <h1 class="page-title">
+                        <i class="fas fa-paw"></i>
+                        Pet Management
+                    </h1>
+                    <p class="page-subtitle">Add, edit, and manage all pets in the adoption system</p>
+                </div>
+                <div class="header-right">
+                    <a href="{{ url_for('admin_add_pet') }}" class="modern-btn primary large">
+                        <i class="fas fa-plus"></i>
+                        <span>Add New Pet</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="pets-stats-bar" data-aos="fade-up">
+        <div class="container">
+            <div class="stats-row">
+                {% set total_pets = pets|length %}
+                {% set available_pets = pets|selectattr('status', 'equalto', 'available')|list|length %}
+                {% set adopted_pets = pets|selectattr('status', 'equalto', 'adopted')|list|length %}
+
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_pets }}</div>
+                    <div class="stat-label">Total Pets</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number available">{{ available_pets }}</div>
+                    <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number adopted">{{ adopted_pets }}</div>
+                    <div class="stat-label">Adopted</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pets Grid -->
+    <div class="pets-content-section">
+        <div class="container">
+            {% if pets %}
+            <div class="pets-grid" data-aos="fade-up" data-aos-delay="200">
+                {% for pet in pets %}
+                <div class="modern-pet-admin-card" data-aos="zoom-in" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="pet-card-header">
+                        <div class="pet-image-container">
+                            {% if pet.photo_filename %}
+                            <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}"
+                                class="pet-admin-image" alt="Photo of {{ pet.name }}">
+                            {% else %}
+                            <div class="pet-image-placeholder">
+                                <i class="fas fa-paw"></i>
+                            </div>
+                            {% endif %}
+
+                            <div class="pet-status-overlay">
+                                {% if pet.status == 'available' %}
+                                <span class="status-badge available">
+                                    <i class="fas fa-heart"></i>
+                                    Available
+                                </span>
+                                {% elif pet.status == 'adopted' %}
+                                <span class="status-badge adopted">
+                                    <i class="fas fa-home"></i>
+                                    Adopted
+                                </span>
+                                {% else %}
+                                <span class="status-badge other">
+                                    <i class="fas fa-clock"></i>
+                                    {{ pet.status | title }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pet-card-body">
+                        <div class="pet-main-info">
+                            <h3 class="pet-name">{{ pet.name }}</h3>
+                            <div class="pet-species-breed">
+                                <span class="species">{{ pet.species | title }}</span>
+                                <span class="separator">•</span>
+                                <span class="breed">{{ pet.breed }}</span>
+                            </div>
+                        </div>
+
+                        <div class="pet-details-grid">
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ pet.age }} years</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-{{ 'mars' if pet.gender == 'male' else 'venus' }}"></i>
+                                <span>{{ pet.gender | title }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-ruler-vertical"></i>
+                                <span>{{ pet.size | title }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ pet.location }}</span>
+                            </div>
+                        </div>
+
+                        {% if pet.description %}
+                        <div class="pet-description">
+                            {{ pet.description[:100] }}{% if pet.description|length > 100 %}...{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="pet-card-actions">
+                        <div class="action-buttons">
+                            <a href="{{ url_for('pet_detail', pet_id=pet.id) }}" class="action-btn view"
+                                title="View Details">
+                                <i class="fas fa-eye"></i>
+                                <span>View</span>
+                            </a>
+                            <a href="{{ url_for('admin_edit_pet', pet_id=pet.id) }}" class="action-btn edit"
+                                title="Edit Pet">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit</span>
+                            </a>
+                            <form method="POST" action="{{ url_for('admin_delete_pet', pet_id=pet.id) }}"
+                                class="delete-form"
+                                onsubmit="return confirm('Are you sure you want to delete {{ pet.name }}?')">
+                                <button type="submit" class="action-btn delete" title="Delete Pet">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state" data-aos="fade-up">
+                <div class="empty-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h3>No Pets Added Yet</h3>
+                <p>Get started by adding your first pet to the adoption system.</p>
+                <a href="{{ url_for('admin_add_pet') }}" class="modern-btn primary">
+                    <i class="fas fa-plus"></i>
+                    Add First Pet
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

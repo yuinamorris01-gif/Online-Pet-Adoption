@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Adopt {{ pet.name }} - Pet Adoption System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav class="modern-breadcrumb" aria-label="breadcrumb">
+        <a href="{{ url_for('index') }}" class="breadcrumb-link"><i class="fas fa-home"></i> Home</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="{{ url_for('pets') }}" class="breadcrumb-link">Browse Pets</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="{{ url_for('pet_detail', pet_id=pet.id) }}" class="breadcrumb-link">{{ pet.name }}</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">Adoption Application</span>
+    </nav>
+    <div class="row mt-4 g-4 align-items-stretch">
+        <div class="col-lg-4 col-md-5">
+            <div class="card pet-info-modern-card h-100">
+                <div class="pet-image-container-modern">
+                    {% if pet.photo_filename %}
+                    <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}"
+                        class="pet-main-image-modern" alt="{{ pet.name }}">
+                    {% else %}
+                    <div class="pet-gallery-placeholder-modern">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h3 class="pet-name-modern">{{ pet.name }}</h3>
+                    <div class="pet-species-breed-modern">
+                        <span class="species">{{ pet.species | title }}</span>
+                        <span class="separator">•</span>
+                        <span class="breed">{{ pet.breed }}</span>
+                    </div>
+                    <div class="pet-details-modern mt-2">
+                        <span><i class="fas fa-birthday-cake"></i> {{ pet.age }} years old</span><br>
+                        <span><i class="fas fa-map-marker-alt"></i> {{ pet.location }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-7 d-flex justify-content-center">
+            <div class="card application-form-modern-card h-100">
+                <div class="card-body">
+                    <h2 class="application-title-modern mb-4">
+                        <i class="fas fa-heart text-danger"></i> Adoption Application for {{ pet.name }}
+                    </h2>
+                    <p class="text-muted mb-4">Please fill out this application completely. All fields marked with * are
+                        required.</p>
+                    <form method="POST" id="adoptionForm">
+                        <div class="form-section mb-4">
+                            <h5 class="form-section-title">Housing Information</h5>
+                            <div class="mb-3">
+                                <label for="housing_type" class="form-label">Housing Type <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="housing_type" name="housing_type" required>
+                                    <option value="">Select housing type</option>
+                                    <option value="house">House</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="condo">Condominium</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-section mb-4">
+                            <h5 class="form-section-title">Pet Experience</h5>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="has_other_pets"
+                                    name="has_other_pets">
+                                <label class="form-check-label" for="has_other_pets">I currently have other pets</label>
+                            </div>
+                            <div class="mb-3 hidden" id="other_pets_section">
+                                <label for="other_pets_description" class="form-label">Please describe your other pets
+                                    (species, breed, age, temperament)</label>
+                                <textarea class="form-control" id="other_pets_description" name="other_pets_description"
+                                    rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="experience_with_pets" class="form-label">Experience with Pets <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="experience_with_pets" name="experience_with_pets"
+                                    required>
+                                    <option value="">Select your experience level</option>
+                                    <option value="first_time">First-time pet owner</option>
+                                    <option value="some">Some experience</option>
+                                    <option value="experienced">Very experienced</option>
+                                    <option value="professional">Professional (vet, trainer, etc.)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-section mb-4">
+                            <h5 class="form-section-title">Adoption Motivation</h5>
+                            <div class="mb-3">
+                                <label for="reason_for_adoption" class="form-label">Why do you want to adopt {{ pet.name
+                                    }}? <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="reason_for_adoption" name="reason_for_adoption"
+                                    rows="4" required
+                                    placeholder="Tell us why you'd like to give {{ pet.name }} a loving home..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-section mb-4">
+                            <h5 class="form-section-title">Additional Information</h5>
+                            <div class="mb-3">
+                                <label for="additional_info" class="form-label">Any additional information you'd like to
+                                    share?</label>
+                                <textarea class="form-control" id="additional_info" name="additional_info" rows="3"
+                                    placeholder="Optional: Tell us anything else that might be relevant to your application..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-section mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms_agreement" required>
+                                <label class="form-check-label" for="terms_agreement">
+                                    I understand that this application will be reviewed by the shelter staff, and I
+                                    agree to provide additional information if requested. <span
+                                        class="text-danger">*</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{{ url_for('pet_detail', pet_id=pet.id) }}" class="btn btn-link text-purple">
+                                <i class="fas fa-arrow-left"></i> Back to {{ pet.name }}
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg d-flex align-items-center gap-2">
+                                <i class="fas fa-heart"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hasOtherPets = document.getElementById('has_other_pets');
+        const otherPetsSection = document.getElementById('other_pets_section');
+        hasOtherPets.addEventListener('change', function () {
+            if (this.checked) {
+                otherPetsSection.classList.remove('hidden');
+            } else {
+                otherPetsSection.classList.add('hidden');
+                document.getElementById('other_pets_description').value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}

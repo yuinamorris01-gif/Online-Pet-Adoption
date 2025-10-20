@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pet.name }} - ADOPT ME{% endblock %}
+
+{% block content %}
+<div class="pet-detail-page">
+    <!-- Hero Section -->
+    <div class="pet-hero-section" data-aos="fade-down">
+        <div class="container">
+            <div class="hero-content">
+                <div class="breadcrumb-navigation">
+                    <a href="{{ url_for('index') }}" class="breadcrumb-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="{{ url_for('pets') }}" class="breadcrumb-link">
+                        <i class="fas fa-paw"></i>
+                        <span>Browse Pets</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current">{{ pet.name }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="pet-content-section">
+        <div class="container">
+            <div class="pet-content-grid">
+                <!-- Left Column - Pet Image -->
+                <div class="pet-image-column" data-aos="fade-right">
+                    <div class="pet-image-container">
+                        {% if pet.photo_filename %}
+                        <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}"
+                            class="pet-main-image" alt="{{ pet.name }}">
+                        {% else %}
+                        <div class="pet-image-placeholder">
+                            <i class="fas fa-paw"></i>
+                            <span>No Photo Available</span>
+                        </div>
+                        {% endif %}
+
+                        <!-- Status Badge Overlay -->
+                        <div class="status-badge-overlay">
+                            {% if pet.status == 'available' %}
+                            <span class="status-badge available">
+                                <i class="fas fa-heart"></i>
+                                Available for Adoption
+                            </span>
+                            {% elif pet.status == 'adopted' %}
+                            <span class="status-badge adopted">
+                                <i class="fas fa-check-circle"></i>
+                                Adopted
+                            </span>
+                            {% else %}
+                            <span class="status-badge pending">
+                                <i class="fas fa-clock"></i>
+                                Pending Adoption
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Pet Information -->
+                <div class="pet-info-column" data-aos="fade-left">
+                    <div class="pet-header">
+                        <h1 class="pet-name">{{ pet.name }}</h1>
+                        <div class="pet-subtitle">
+                            <span class="species-badge">
+                                <i class="fas fa-paw"></i>
+                                {{ pet.species | title }}
+                            </span>
+                            <span class="breed-text">{{ pet.breed }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Basic Information Card -->
+                    <div class="info-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Basic Information
+                        </h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Age</span>
+                                    <span class="info-value">{{ pet.age }} years old</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-venus-mars"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Gender</span>
+                                    <span class="info-value">{{ pet.gender | title }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-ruler-vertical"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Size</span>
+                                    <span class="info-value">{{ pet.size | title }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Location</span>
+                                    <span class="info-value">{{ pet.location }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vaccination Status Card -->
+                    {% if pet.vaccination_status %}
+                    <div class="info-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-syringe"></i>
+                            Vaccination Status
+                        </h3>
+                        <div class="vaccination-status">
+                            <span class="status-indicator {{ pet.vaccination_status }}">
+                                {% if pet.vaccination_status == 'up-to-date' %}
+                                <i class="fas fa-check-circle"></i>
+                                Up to Date
+                                {% elif pet.vaccination_status == 'partial' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                                Partially Vaccinated
+                                {% elif pet.vaccination_status == 'unknown' %}
+                                <i class="fas fa-question-circle"></i>
+                                Unknown
+                                {% else %}
+                                <i class="fas fa-times-circle"></i>
+                                Not Vaccinated
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="action-section">
+                        {% if pet.status == 'available' and session.user_id and session.role != 'admin' %}
+                        <a href="{{ url_for('adopt', pet_id=pet.id) }}" class="action-btn primary large">
+                            <i class="fas fa-heart"></i>
+                            <span>Adopt Me</span>
+                        </a>
+                        {% elif not session.user_id %}
+                        <a href="{{ url_for('login') }}" class="action-btn primary large">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Sign In to Adopt Me</span>
+                        </a>
+                        {% elif pet.status != 'available' %}
+                        <div class="status-message">
+                            <i class="fas fa-info-circle"></i>
+                            <span>This pet is no longer available for adoption.</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="about-section" data-aos="fade-up">
+                <div class="about-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-heart"></i>
+                        About {{ pet.name }}
+                    </h3>
+                    <div class="about-content">
+                        <p class="pet-description">{{ pet.description }}</p>
+
+                        {% if pet.special_needs %}
+                        <div class="special-needs-section">
+                            <h4 class="special-needs-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Special Needs
+                            </h4>
+                            <p class="special-needs-text">{{ pet.special_needs }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

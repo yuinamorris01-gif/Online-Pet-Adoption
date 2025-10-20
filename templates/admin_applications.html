@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Manage Applications - ADOPT ME Admin{% endblock %}
+
+{% block content %}
+<div class="admin-applications-page">
+    <!-- Header Section -->
+    <div class="admin-page-header" data-aos="fade-down">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="header-left">
+                    <div class="page-breadcrumb">
+                        <a href="{{ url_for('admin_dashboard') }}" class="breadcrumb-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Applications</span>
+                    </div>
+                    <h1 class="page-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Application Management
+                    </h1>
+                    <p class="page-subtitle">Review and manage all adoption applications</p>
+                </div>
+                <div class="header-right">
+                    <div class="filter-buttons">
+                        <a href="{{ url_for('admin_applications', status='all') }}"
+                            class="filter-btn {{ 'active' if status_filter == 'all' else '' }}">
+                            <i class="fas fa-list"></i>
+                            <span>All</span>
+                        </a>
+                        <a href="{{ url_for('admin_applications', status='pending') }}"
+                            class="filter-btn pending {{ 'active' if status_filter == 'pending' else '' }}">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending</span>
+                        </a>
+                        <a href="{{ url_for('admin_applications', status='approved') }}"
+                            class="filter-btn approved {{ 'active' if status_filter == 'approved' else '' }}">
+                            <i class="fas fa-check"></i>
+                            <span>Approved</span>
+                        </a>
+                        <a href="{{ url_for('admin_applications', status='denied') }}"
+                            class="filter-btn denied {{ 'active' if status_filter == 'denied' else '' }}">
+                            <i class="fas fa-times"></i>
+                            <span>Denied</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="applications-stats-bar" data-aos="fade-up">
+        <div class="container">
+            <div class="stats-row">
+                {% set total_applications = applications|length if applications else 0 %}
+                {% set pending_count = applications|selectattr('status', 'equalto', 'pending')|list|length if
+                applications else 0 %}
+                {% set approved_count = applications|selectattr('status', 'equalto', 'approved')|list|length if
+                applications else 0 %}
+                {% set denied_count = applications|selectattr('status', 'equalto', 'denied')|list|length if applications
+                else 0 %}
+
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_applications }}</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number pending">{{ pending_count }}</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number approved">{{ approved_count }}</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number denied">{{ denied_count }}</div>
+                    <div class="stat-label">Denied</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Content -->
+    <div class="applications-content-section">
+        <div class="container">
+            {% if applications %}
+            <div class="applications-grid" data-aos="fade-up" data-aos-delay="200">
+                {% for app in applications %}
+                <div class="modern-application-card" data-aos="zoom-in" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="application-card-header">
+                        <div class="application-status">
+                            {% if app.status == 'pending' %}
+                            <span class="status-badge pending">
+                                <i class="fas fa-clock"></i>
+                                Pending Review
+                            </span>
+                            {% elif app.status == 'approved' %}
+                            <span class="status-badge approved">
+                                <i class="fas fa-check-circle"></i>
+                                Approved
+                            </span>
+                            {% elif app.status == 'denied' %}
+                            <span class="status-badge denied">
+                                <i class="fas fa-times-circle"></i>
+                                Denied
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="application-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ app.submitted_at | strftime('%b %d, %Y') }}
+                        </div>
+                    </div>
+
+                    <div class="application-card-body">
+                        <div class="pet-info-section">
+                            <h3 class="pet-name">
+                                <i class="fas fa-paw"></i>
+                                {{ app.pet_name }}
+                            </h3>
+                            <div class="pet-details">
+                                <span class="species">{{ app.species | title }}</span>
+                                <span class="separator">•</span>
+                                <span class="breed">{{ app.breed }}</span>
+                            </div>
+                        </div>
+
+                        <div class="applicant-info-section">
+                            <div class="applicant-header">
+                                <i class="fas fa-user"></i>
+                                <h4 class="applicant-name">{{ app.applicant_name }}</h4>
+                            </div>
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>{{ app.applicant_email }}</span>
+                                </div>
+                                {% if app.applicant_phone %}
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>{{ app.applicant_phone }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="application-meta">
+                            <div class="submitted-time">
+                                <i class="fas fa-clock"></i>
+                                {{ app.submitted_at | strftime('%I:%M %p') }}
+                            </div>
+                            {% if app.status != 'pending' %}
+                            <div class="priority-indicator priority-{{ app.status }}">
+                                <span class="priority-dot"></span>
+                                {{ app.status | title }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="application-card-actions">
+                        <a href="{{ url_for('admin_application_detail', app_id=app.id) }}" class="review-btn">
+                            <i class="fas fa-search"></i>
+                            <span>Review Application</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state" data-aos="fade-up">
+                <div class="empty-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3>No Applications Found</h3>
+                <p>
+                    {% if status_filter == 'pending' %}
+                    No pending applications at the moment. Check back later!
+                    {% elif status_filter == 'approved' %}
+                    No approved applications yet. Review pending applications to approve them.
+                    {% elif status_filter == 'denied' %}
+                    No denied applications yet. This is a good sign!
+                    {% else %}
+                    No applications have been submitted yet. Users will start applying for pet adoptions soon.
+                    {% endif %}
+                </p>
+                <div class="empty-actions">
+                    {% if status_filter != 'all' %}
+                    <a href="{{ url_for('admin_applications', status='all') }}" class="modern-btn primary">
+                        <i class="fas fa-list"></i>
+                        View All Applications
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

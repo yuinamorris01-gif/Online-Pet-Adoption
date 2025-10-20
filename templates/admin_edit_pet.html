@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block title %}Edit Pet - ADOPT ME Admin{% endblock %}
+
+{% block content %}
+<div class="admin-edit-pet-page">
+    <!-- Header Section -->
+    <div class="admin-page-header" data-aos="fade-down">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="header-left">
+                    <div class="page-breadcrumb">
+                        <a href="{{ url_for('admin_dashboard') }}" class="breadcrumb-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <a href="{{ url_for('admin_pets') }}" class="breadcrumb-link">
+                            <i class="fas fa-paw"></i>
+                            Manage Pets
+                        </a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Edit Pet</span>
+                    </div>
+                    <h1 class="page-title">
+                        <i class="fas fa-edit"></i>
+                        Edit Pet: {{ pet.name }}
+                    </h1>
+                    <p class="page-subtitle">Update pet information and details</p>
+                </div>
+                <div class="header-right">
+                    <a href="{{ url_for('admin_pets') }}" class="modern-btn secondary large">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Pets</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form Section -->
+    <div class="edit-form-section" data-aos="fade-up">
+        <div class="container">
+            <div class="edit-form-card">
+                <form method="POST" enctype="multipart/form-data" class="modern-form">
+                    <div class="form-grid">
+                        <!-- Left Column -->
+                        <div class="form-column">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-info-circle"></i>
+                                    Basic Information
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="name" class="modern-label">
+                                        <i class="fas fa-tag"></i>
+                                        Pet Name *
+                                    </label>
+                                    <input type="text" class="modern-input" id="name" name="name" value="{{ pet.name }}"
+                                        required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="species" class="modern-label">
+                                            <i class="fas fa-paw"></i>
+                                            Species *
+                                        </label>
+                                        <select class="modern-select" id="species" name="species" required>
+                                            <option value="">Select species</option>
+                                            <option value="dog" {{ 'selected' if pet.species=='dog' }}>Dog</option>
+                                            <option value="cat" {{ 'selected' if pet.species=='cat' }}>Cat</option>
+                                            <option value="rabbit" {{ 'selected' if pet.species=='rabbit' }}>Rabbit
+                                            </option>
+                                            <option value="bird" {{ 'selected' if pet.species=='bird' }}>Bird</option>
+                                            <option value="hamster" {{ 'selected' if pet.species=='hamster' }}>Hamster
+                                            </option>
+                                            <option value="other" {{ 'selected' if pet.species=='other' }}>Other
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="breed" class="modern-label">
+                                            <i class="fas fa-dna"></i>
+                                            Breed *
+                                        </label>
+                                        <input type="text" class="modern-input" id="breed" name="breed"
+                                            value="{{ pet.breed }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="age" class="modern-label">
+                                            <i class="fas fa-calendar"></i>
+                                            Age (years) *
+                                        </label>
+                                        <input type="number" class="modern-input" id="age" name="age"
+                                            value="{{ pet.age }}" min="0" max="25" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="gender" class="modern-label">
+                                            <i class="fas fa-venus-mars"></i>
+                                            Gender *
+                                        </label>
+                                        <select class="modern-select" id="gender" name="gender" required>
+                                            <option value="">Select gender</option>
+                                            <option value="male" {{ 'selected' if pet.gender=='male' }}>Male</option>
+                                            <option value="female" {{ 'selected' if pet.gender=='female' }}>Female
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="size" class="modern-label">
+                                            <i class="fas fa-ruler-vertical"></i>
+                                            Size *
+                                        </label>
+                                        <select class="modern-select" id="size" name="size" required>
+                                            <option value="">Select size</option>
+                                            <option value="small" {{ 'selected' if pet.size=='small' }}>Small</option>
+                                            <option value="medium" {{ 'selected' if pet.size=='medium' }}>Medium
+                                            </option>
+                                            <option value="large" {{ 'selected' if pet.size=='large' }}>Large</option>
+                                            <option value="extra-large" {{ 'selected' if pet.size=='extra-large' }}>
+                                                Extra Large</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="location" class="modern-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Location *
+                                    </label>
+                                    <input type="text" class="modern-input" id="location" name="location"
+                                        value="{{ pet.location }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="vaccination_status" class="modern-label">
+                                        <i class="fas fa-syringe"></i>
+                                        Vaccination Status *
+                                    </label>
+                                    <select class="modern-select" id="vaccination_status" name="vaccination_status"
+                                        required>
+                                        <option value="">Select status</option>
+                                        <option value="up-to-date" {{ 'selected' if pet.vaccination_status=='up-to-date'
+                                            }}>Up to date</option>
+                                        <option value="partial" {{ 'selected' if pet.vaccination_status=='partial' }}>
+                                            Partially vaccinated</option>
+                                        <option value="unknown" {{ 'selected' if pet.vaccination_status=='unknown' }}>
+                                            Unknown</option>
+                                        <option value="not-vaccinated" {{ 'selected' if
+                                            pet.vaccination_status=='not-vaccinated' }}>Not vaccinated</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="form-column">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-image"></i>
+                                    Photo & Details
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="photo" class="modern-label">
+                                        <i class="fas fa-camera"></i>
+                                        Pet Photo
+                                    </label>
+                                    <div class="photo-upload-container">
+                                        {% if pet.photo_filename %}
+                                        <div class="current-photo">
+                                            <img src="{{ url_for('static', filename='images/' + pet.photo_filename) }}"
+                                                alt="Current photo of {{ pet.name }}" class="current-photo-img">
+                                            <div class="current-photo-overlay">
+                                                <span>Current Photo</span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <input type="file" class="modern-input file-input" id="photo" name="photo"
+                                            accept="image/*">
+                                        <div class="form-help">Upload a new photo (JPG, PNG, max 16MB)</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description" class="modern-label">
+                                        <i class="fas fa-align-left"></i>
+                                        Description *
+                                    </label>
+                                    <textarea class="modern-input" id="description" name="description" rows="6" required
+                                        placeholder="Describe the pet's personality, behavior, and any special characteristics...">{{ pet.description }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="special_needs" class="modern-label">
+                                        <i class="fas fa-heart"></i>
+                                        Special Needs
+                                    </label>
+                                    <textarea class="modern-input" id="special_needs" name="special_needs" rows="3"
+                                        placeholder="Any medical conditions, dietary restrictions, or special care requirements...">{{ pet.special_needs or '' }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status" class="modern-label">
+                                        <i class="fas fa-toggle-on"></i>
+                                        Status
+                                    </label>
+                                    <select class="modern-select" id="status" name="status">
+                                        <option value="available" {{ 'selected' if pet.status=='available' }}>Available
+                                        </option>
+                                        <option value="adopted" {{ 'selected' if pet.status=='adopted' }}>Adopted
+                                        </option>
+                                        <option value="pending" {{ 'selected' if pet.status=='pending' }}>Pending
+                                        </option>
+                                        <option value="unavailable" {{ 'selected' if pet.status=='unavailable' }}>
+                                            Unavailable</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_pets') }}" class="modern-btn secondary">
+                                <i class="fas fa-times"></i>
+                                <span>Cancel</span>
+                            </a>
+                            <button type="submit" class="modern-btn primary">
+                                <i class="fas fa-save"></i>
+                                <span>Update Pet</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

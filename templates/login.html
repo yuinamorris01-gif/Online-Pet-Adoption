@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - ADOPT ME{% endblock %}
+
+{% block content %}
+<div class="modern-auth-page">
+    <div class="auth-background">
+        <div class="auth-overlay"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card" data-aos="fade-up" data-aos-duration="800">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your ADOPT ME account</p>
+            </div>
+
+            <!-- Enhanced form with better validation -->
+            <form method="POST" class="auth-form" id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="username" class="modern-label">
+                        <i class="fas fa-user"></i>
+                        Username or Email
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" class="modern-input" id="username" name="username" required
+                            autocomplete="username" placeholder="Enter your username or email"
+                            aria-describedby="username-error">
+                        <div class="input-error" id="username-error" role="alert"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="modern-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="password-input-wrapper">
+                            <input type="password" class="modern-input" id="password" name="password" required
+                                autocomplete="current-password" placeholder="Enter your password"
+                                aria-describedby="password-error">
+                            <button type="button" class="password-toggle" onclick="togglePassword()"
+                                aria-label="Toggle password visibility" tabindex="-1">
+                                <i class="fas fa-eye" id="password-eye"></i>
+                            </button>
+                        </div>
+                        <div class="input-error" id="password-error" role="alert"></div>
+                    </div>
+                </div>
+
+                <!-- Remember me option -->
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me" name="remember_me" class="checkbox-input">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">Remember me</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="auth-btn primary" id="submitBtn">
+                        <i class="fas fa-sign-in-alt" id="submitIcon"></i>
+                        <span id="submitText">Sign In</span>
+                        <div class="btn-loader" id="btnLoader"></div>
+                    </button>
+
+                    <div class="auth-links">
+                        <a href="{{ url_for('forgot_password') }}" class="auth-link">
+                            <i class="fas fa-key"></i>
+                            Forgot Password?
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+
+            <div class="auth-footer">
+                <p class="auth-footer-text">Don't have an account yet?</p>
+                <a href="{{ url_for('register') }}" class="auth-btn secondary">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create Account</span>
+                </a>
+            </div>
+
+            <!-- Demo credentials notice (more secure way) -->
+            <div class="demo-notice">
+                <div class="demo-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Demo Mode: Use 'admin' / 'admin123' for admin access</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize AOS animations
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Enhanced form validation and UX
+    class LoginFormHandler {
+        constructor() {
+            this.form = document.getElementById('loginForm');
+            this.submitBtn = document.getElementById('submitBtn');
+            this.submitIcon = document.getElementById('submitIcon');
+            this.submitText = document.getElementById('submitText');
+            this.btnLoader = document.getElementById('btnLoader');
+            this.usernameInput = document.getElementById('username');
+            this.passwordInput = document.getElementById('password');
+            this.usernameError = document.getElementById('username-error');
+            this.passwordError = document.getElementById('password-error');
+
+            this.init();
+        }
+
+        init() {
+            this.bindEvents();
+            this.setupInputEffects();
+            this.setupKeyboardNavigation();
+        }
+
+        bindEvents() {
+            // Form submission with validation
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+            // Real-time validation
+            this.usernameInput.addEventListener('blur', () => this.validateUsername());
+            this.passwordInput.addEventListener('blur', () => this.validatePassword());
+            this.usernameInput.addEventListener('input', () => this.clearError('username'));
+            this.passwordInput.addEventListener('input', () => this.clearError('password'));
+
+            // Password toggle
+            document.querySelector('.password-toggle').addEventListener('click', () => this.togglePassword());
+        }
+
+        setupInputEffects() {
+            const inputs = document.querySelectorAll('.modern-input');
+
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.closest('.form-group').classList.add('focused');
+                    input.closest('.input-wrapper').classList.add('focused');
+                });
+
+                input.addEventListener('blur', () => {
+                    if (!input.value.trim()) {
+                        input.closest('.form-group').classList.remove('focused');
+                        input.closest('.input-wrapper').classList.remove('focused');
+                    }
+                });
+
+                // Check if input has value on page load
+                if (input.value.trim()) {
+                    input.closest('.form-group').classList.add('focused');
+                    input.closest('.input-wrapper').classList.add('focused');
+                }
+            });
+        }
+
+        setupKeyboardNavigation() {
+            // Enter key navigation
+            this.usernameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.passwordInput.focus();
+                }
+            });
+
+            this.passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && this.validateForm()) {
+                    this.form.dispatchEvent(new Event('submit', { cancelable: true }));
+                }
+            });
+        }
+
+        validateUsername() {
+            const username = this.usernameInput.value.trim();
+
+            if (!username) {
+                this.showError('username', 'Username or email is required');
+                return false;
+            }
+
+            if (username.length < 3) {
+                this.showError('username', 'Username must be at least 3 characters');
+                return false;
+            }
+
+            // Email validation if contains @
+            if (username.includes('@')) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(username)) {
+                    this.showError('username', 'Please enter a valid email address');
+                    return false;
+                }
+            }
+
+            this.clearError('username');
+            return true;
+        }
+
+        validatePassword() {
+            const password = this.passwordInput.value;
+
+            if (!password) {
+                this.showError('password', 'Password is required');
+                return false;
+            }
+
+            if (password.length < 6) {
+                this.showError('password', 'Password must be at least 6 characters');
+                return false;
+            }
+
+            this.clearError('password');
+            return true;
+        }
+
+        validateForm() {
+            const isUsernameValid = this.validateUsername();
+            const isPasswordValid = this.validatePassword();
+
+            return isUsernameValid && isPasswordValid;
+        }
+
+        showError(field, message) {
+            const errorEl = field === 'username' ? this.usernameError : this.passwordError;
+            const inputEl = field === 'username' ? this.usernameInput : this.passwordInput;
+            const wrapperEl = inputEl.closest('.input-wrapper');
+
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            wrapperEl.classList.add('error');
+            inputEl.setAttribute('aria-invalid', 'true');
+
+            // Add shake animation
+            wrapperEl.classList.add('shake');
+            setTimeout(() => wrapperEl.classList.remove('shake'), 500);
+        }
+
+        clearError(field) {
+            const errorEl = field === 'username' ? this.usernameError : this.passwordError;
+            const inputEl = field === 'username' ? this.usernameInput : this.passwordInput;
+            const wrapperEl = inputEl.closest('.input-wrapper');
+
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+            wrapperEl.classList.remove('error');
+            inputEl.setAttribute('aria-invalid', 'false');
+        }
+
+        togglePassword() {
+            const passwordEye = document.getElementById('password-eye');
+
+            if (this.passwordInput.type === 'password') {
+                this.passwordInput.type = 'text';
+                passwordEye.classList.remove('fa-eye');
+                passwordEye.classList.add('fa-eye-slash');
+            } else {
+                this.passwordInput.type = 'password';
+                passwordEye.classList.remove('fa-eye-slash');
+                passwordEye.classList.add('fa-eye');
+            }
+        }
+
+        setLoadingState(loading) {
+            if (loading) {
+                this.submitBtn.disabled = true;
+                this.submitBtn.classList.add('loading');
+                this.submitIcon.style.display = 'none';
+                this.submitText.textContent = 'Signing In...';
+                this.btnLoader.style.display = 'block';
+            } else {
+                this.submitBtn.disabled = false;
+                this.submitBtn.classList.remove('loading');
+                this.submitIcon.style.display = 'inline';
+                this.submitText.textContent = 'Sign In';
+                this.btnLoader.style.display = 'none';
+            }
+        }
+
+        handleSubmit(e) {
+            // Prevent multiple submissions
+            if (this.submitBtn.disabled) {
+                e.preventDefault();
+                return;
+            }
+
+            // Validate form
+            if (!this.validateForm()) {
+                e.preventDefault();
+                return;
+            }
+
+            // Set loading state
+            this.setLoadingState(true);
+
+            // Allow form to submit naturally
+            // Loading state will be reset on page reload or if there's an error
+            setTimeout(() => {
+                if (!document.hidden) {
+                    this.setLoadingState(false);
+                }
+            }, 5000); // Fallback timeout
+        }
+    }
+
+    // Legacy password toggle function for backwards compatibility
+    function togglePassword() {
+        if (window.loginFormHandler) {
+            window.loginFormHandler.togglePassword();
+        }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize login form handler
+        window.loginFormHandler = new LoginFormHandler();
+
+        // Add hover effects with GSAP if available
+        if (typeof gsap !== 'undefined') {
+            const authCard = document.querySelector('.auth-card');
+
+            authCard.addEventListener('mouseenter', () => {
+                gsap.to(authCard, {
+                    y: -5,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+
+            authCard.addEventListener('mouseleave', () => {
+                gsap.to(authCard, {
+                    y: 0,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+        }
+
+        // Auto-hide flash messages after 5 seconds
+        const flashMessages = document.querySelectorAll('.alert');
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300);
+                }
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}
