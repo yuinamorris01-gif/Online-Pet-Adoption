@@ -7,6 +7,8 @@ from werkzeug.utils import secure_filename
 import uuid
 import secrets
 from dotenv import load_dotenv
+import webbrowser
+import threading
 
 # Load environment variables from .env file
 load_dotenv()
@@ -828,4 +830,7 @@ def admin_review_application(app_id):
 
 if __name__ == '__main__':
     init_db()
+    def open_browser():
+        webbrowser.open_new('http://127.0.0.1:5000')
+    threading.Timer(1.5, open_browser).start()  # Delay to let the server start
     app.run(debug=True)
